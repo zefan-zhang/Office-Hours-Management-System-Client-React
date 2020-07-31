@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import UserService from "../services/UserService";
 
 export default class RegisterComponent extends React.Component {
 
@@ -9,30 +10,40 @@ export default class RegisterComponent extends React.Component {
             password: "",
             verifyPassword: ""
         },
-        error: null
+        error: null,
     };
 
-    register = () =>
-        fetch(`http://localhost:8080/api/register`, {
-            method: 'POST',
-            body: JSON.stringify(this.state.user),
-            headers: {
-                'content-type': 'application/json'
-            },
-            credentials: "include"
-        }).then(response => response.json())
-            .catch(e => {
-                this.setState(
-                    {
-                        error: "Unable to register"
-                    })
-            })
-            .then(user => {
-                if (user) {
-                    this.props.history.push("/profile")
-                }
+    register = () => {
+        if (this.state.user.verifyPassword === this.state.user.password
+            && this.state.user.username.length > 0
+            && this.state.user.password > 0) {
+            UserService.createUser(this.state.user)
+                .catch(e => {
+                    this.setState(
+                        {
+                            error: "username already exist"
+                        })
+                })
+                .then(user => {
+                    if (user) {
+                        this.props.history.push("/profile")
+                    }
+                });
+        } else if (this.state.user.verifyPassword !== this.state.user.password) {
+            this.setState(
+                {
+                    error: "password doesn't match"
+                })
+        } else if (this.state.user.password === 0 || this.state.user.username === 0) {
+            this.setState(
+                {
+                    error: "all the fields must fill"
+                })
+        }
 
-            });
+    };
+
+    closeAlert = () => this.setState({error: null});
 
     render() {
         return (
@@ -40,13 +51,18 @@ export default class RegisterComponent extends React.Component {
                 <h1 className='text-center'>Create your account</h1>
                 {
                     this.state.error &&
-                    <div className="alert alert-danger">
+                    <div className="alert alert-danger alert-dismissible fade show" role="alert">
                         {this.state.error}
+                        <button onClick={this.closeAlert}
+                                type="button" className="close" data-dismiss="alert"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 }
                 <div className="form-group row">
                     <div className="col-sm-2">
-                        <label for="username">
+                        <label htmlFore="username">
                             Username
                         </label>
                     </div>
@@ -54,7 +70,7 @@ export default class RegisterComponent extends React.Component {
                         <input
                             className='form-control'
                             placeholder="username"
-                            id = "username"
+                            id="username"
                             value={this.state.user.username}
                             onChange={(e) => {
                                 const username = e.target.value;
@@ -78,7 +94,7 @@ export default class RegisterComponent extends React.Component {
                         <input
                             className='form-control'
                             placeholder="password"
-                            id = "password"
+                            id="password"
                             type="password"
                             value={this.state.user.password}
                             onChange={(e) => {
@@ -95,7 +111,7 @@ export default class RegisterComponent extends React.Component {
                 </div>
                 <div className="form-group row">
                     <div className="col-sm-2">
-                        <label for="verifyPassword">
+                        <label htmlFor="verifyPassword">
                             Verify Password
                         </label>
                     </div>
@@ -104,7 +120,7 @@ export default class RegisterComponent extends React.Component {
                             className='form-control'
                             placeholder="validate password"
                             type="password"
-                            id = "verifyPassword"
+                            id="verifyPassword"
                             value={this.state.user.verifyPassword}
                             onChange={(e) => {
                                 const verifyPassword = e.target.value;
@@ -123,6 +139,7 @@ export default class RegisterComponent extends React.Component {
                     <span className="col-sm-2"/>
                     <div className="col-sm-10">
                         <button className="btn btn-primary btn-block"
+                                type="submit"
                                 onClick={this.register}>
                             Register
                         </button>
