@@ -14,7 +14,12 @@ const getCurrentUser = () =>
         credentials: "include"
     }).then(response => response.json())
 
+const getAllUsers = () =>
+    fetch(`http://localhost:8080/api/users`)
+        .then(response => response.json());
+
 export default {
     createUser,
     getCurrentUser,
+    getAllUsers
 }

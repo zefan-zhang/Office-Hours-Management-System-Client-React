@@ -16,6 +16,11 @@ export default class HomeComponent extends React.Component{
                 <a href="/login">
                     Login
                 </a>
+                <br/>
+                <a href="/users">
+                    Users
+                </a>
+
 
             </div>
         )

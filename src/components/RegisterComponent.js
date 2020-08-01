@@ -14,9 +14,12 @@ export default class RegisterComponent extends React.Component {
     };
 
     register = () => {
+        console.log(this.state.user.verifyPassword === this.state.user.password)
+        console.log(this.state.user.verifyPassword)
         if (this.state.user.verifyPassword === this.state.user.password
             && this.state.user.username.length > 0
-            && this.state.user.password > 0) {
+            && this.state.user.password.length > 0) {
+            console.log("i am here")
             UserService.createUser(this.state.user)
                 .catch(e => {
                     this.setState(
@@ -34,12 +37,13 @@ export default class RegisterComponent extends React.Component {
                 {
                     error: "password doesn't match"
                 })
-        } else if (this.state.user.password === 0 || this.state.user.username === 0) {
+        } else if (this.state.user.password.length === 0 || this.state.user.username.length === 0) {
             this.setState(
                 {
                     error: "all the fields must fill"
                 })
         }
+
 
     };
 
@@ -62,7 +66,7 @@ export default class RegisterComponent extends React.Component {
                 }
                 <div className="form-group row">
                     <div className="col-sm-2">
-                        <label htmlFore="username">
+                        <label htmlFor="username">
                             Username
                         </label>
                     </div>

@@ -49,12 +49,12 @@ export default class ProfileComponent extends React.Component {
                 <form>
                     <div className="form-row">
                         <div className="col-md-12 mb-3">
-                        <label>Your role</label>
-                        <input type="text"
-                               className="form-control"
-                               readOnly='readOnly'
-                               placeholder="contact system administration to set up your role"
-                               value={this.state.currentUser.role}/>
+                            <label>Your role</label>
+                            <input type="text"
+                                   className="form-control"
+                                   readOnly='readOnly'
+                                   placeholder="contact system administration to set up your role"
+                                   value={this.state.currentUser.role}/>
                         </div>
                     </div>
                     <div className="form-row">
